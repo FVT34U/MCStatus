@@ -1,0 +1,126 @@
+.navbar-dark .navbar-nav .nav-link {
+    color: rgb(255, 255, 255);
+}
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: rgba(255, 255, 255, 0.55);
+}
+.btn-outline-light {
+    color: rgb(255, 255, 255);
+    border-color: rgb(255, 255, 255);
+}
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255);
+    border-color: rgb(255, 255, 255);
+    color:rgb(65, 160, 65);
+}
+.navbar-dark .navbar-toggler {
+    color: rgb(255, 255, 255);
+    border-color: rgb(255, 255, 255);
+}
+
+.btn-primary {
+    background-color:rgb(65, 160, 65);
+    border-color: rgb(255, 255, 255);
+}
+
+.btn-primary:hover {
+    background-color: rgb(255, 255, 255);
+    color:rgb(65, 160, 65);
+    border-color: rgb(65, 160, 65);;
+}
+
+.list-general-page{
+    padding-top: 10%;
+}
+
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: rgb(255, 255, 255);
+    background-color: rgb(65, 160, 65);
+    border-color: rgb(65, 160, 65);
+}
+
+
+
+.page-link {
+    position: relative;
+    display: block;
+    color: rgb(65, 160, 65);
+    text-decoration: none;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(65, 160, 65);
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.page-link:hover {
+    position: relative;
+    display: block;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    background-color: rgb(65, 160, 65);
+    border: 1px solid rgb(65, 160, 65);
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.disabled{
+    color: rgb(0, 0, 0);
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+}
+
+.Sing-up-space{
+    padding-left: 35%;
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+}
+
+.main-sever-page{
+    padding-top: 4%;
+}
+
+.text-server-page-carousel{
+    text-shadow: 3px 3px 3px black;
+}
+
+.logo-creat-server{
+    padding-top: 6%;
+}

@@ -1,0 +1,67 @@
+CREATE TABLE IF NOT EXISTS public."User"
+(
+    "ID" integer NOT NULL,
+    "Login" text COLLATE pg_catalog."default" NOT NULL,
+    "Email" text COLLATE pg_catalog."default" NOT NULL,
+    "Password" text COLLATE pg_catalog."default" NOT NULL,
+    "Bio" text COLLATE pg_catalog."default",
+    "Role" text COLLATE pg_catalog."default" NOT NULL DEFAULT USER,
+    "Nickname" text COLLATE pg_catalog."default" NOT NULL,
+    "LikedCommentsID" integer[],
+    "DislikedCommentsID" integer[],
+    "RatedServersID" integer[],
+    CONSTRAINT "PrmkID" PRIMARY KEY ("ID"),
+    CONSTRAINT "RoleVar" CHECK ("Role" = 'user'::text OR "Role" = 'admin'::text)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."User"
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS public."ServerPage"
+(
+    "ID" integer NOT NULL,
+    "Name" text COLLATE pg_catalog."default" NOT NULL,
+    "IP" text COLLATE pg_catalog."default" NOT NULL,
+    "Version" text COLLATE pg_catalog."default" NOT NULL DEFAULT 1.18,
+    "Description" text COLLATE pg_catalog."default",
+    "Image" text COLLATE pg_catalog."default",
+    "Rating" numeric(3,2) DEFAULT 0,
+    "CommentsID" integer[],
+    "Plugins" text[] COLLATE pg_catalog."default",
+    "Tags" text[] COLLATE pg_catalog."default",
+    "OwnerID" integer NOT NULL,
+    CONSTRAINT "ServerPagePrmkID" PRIMARY KEY ("ID"),
+    CONSTRAINT "ServerPageFKOwnerID" FOREIGN KEY ("OwnerID")
+        REFERENCES public."User" ("ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "ServerPageRatingCheck" CHECK ("Rating" >= 0::numeric AND "Rating" <= 5::numeric)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."ServerPage"
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS public."Comment"
+(
+    "ID" integer NOT NULL,
+    "OwnerID" integer NOT NULL,
+    "CountLike" integer NOT NULL DEFAULT 0,
+    "CountDislike" integer NOT NULL DEFAULT 0,
+    "Text" text COLLATE pg_catalog."default",
+    CONSTRAINT "CommentPK" PRIMARY KEY ("ID"),
+    CONSTRAINT "CommentOwnerFK" FOREIGN KEY ("OwnerID")
+        REFERENCES public."User" ("ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Comment"
+    OWNER to postgres;
