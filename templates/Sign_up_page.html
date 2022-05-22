@@ -18,11 +18,11 @@
       </div>
         <div class="col-mb-3 col-lg-8 Sing-up-space">
           <h4 class="mb-3">Введите данные</h4>
-          <form class="needs-validation" novalidate="">
+          <form class="needs-validation" novalidate="" method="post">
             <div class="row g-3">
               <div class="col-sm-6">
                 <label for="login" class="form-label">Логин</label>
-                <input type="text" class="form-control" id="login" placeholder="Orange" value="" required="">
+                <input type="text" class="form-control" id="login" name="login" placeholder="Orange" value="" required="">
                 <div class="invalid-feedback">
                   Некорректный логин, введите корректные символы
                 </div>
@@ -30,7 +30,7 @@
   
               <div class="col-sm-6">
                 <label for="password" class="form-label">Пароль</label>
-                <input type="password" class="form-control" id="password" placeholder="" value="" required="">
+                <input type="password" class="form-control" id="password" name="password" placeholder="" value="" required="">
                 <div class="invalid-feedback">
                   Некорректный пароль, введите корректные символы
                 </div>
@@ -38,7 +38,7 @@
   
               <div class="col-12">
                 <label for="nickname" class="form-label">Никнейм</label>
-                <input type="text" class="form-control" id="nickName" placeholder="Nickname" value="" required="">
+                <input type="text" class="form-control" id="nickName" name="nickName" placeholder="Nickname" value="" required="">
                 <div class="invalid-feedback">
                   Некорректное никнейм, введите корректные символы
                 </div>
@@ -46,7 +46,7 @@
   
               <div class="col-12">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Pls_add_one_point@example.com">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Pls_add_one_point@example.com">
                 <div class="invalid-feedback">
                   Некорректная почта, введите корректные символы
                 </div>
