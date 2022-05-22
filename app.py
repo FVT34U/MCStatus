@@ -29,5 +29,10 @@ def server_page(server_id):
     return render_template('Server_page.html')
 
 
+@app.errorhandler(404)
+def http_404_handler(error):
+    return "<p>HTTP 404 Error Encountered</p>", 404
+
+
 if __name__ == '__main__':
     app.run(debug=True)
