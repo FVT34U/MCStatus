@@ -119,15 +119,32 @@ def about_page():
     return render_template('Main_page.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login_page():
-    if 'loggedIn' in session:
-        if session['loggedIn']:
-            return redirect('/')
+    if request.method == 'POST':
+        login = request.form['login']
+        password = request.form['password']
+        get_data = User.query.filter_by(Login=login).all()
+        for i in get_data:
+            if login in i.Login:
+                if password in i.Password:
+                    #print('Logged In!!!' + str(i.ID) + login + ' ' + password)
+                    print('Logged In!!!')
+                    session['loggedIn'] = True
+                    session['userID'] = i.ID
+                    session.modified = True
+                    return redirect('/')
+        else:
+            print('Invalid login or password!!!')
+            abort(404)
     else:
-        session['loggedIn'] = False
-        session.modified = True
-    return render_template('Login_page.html')
+        if 'loggedIn' in session:
+            if session['loggedIn']:
+                return redirect('/')
+        else:
+            session['loggedIn'] = False
+            session.modified = True
+        return render_template('Login_page.html')
 
 
 @app.route('/reg', methods=['POST', 'GET'])
@@ -144,6 +161,7 @@ def reg_page():
             db.session.add(user1)
             db.session.commit()
             session['loggedIn'] = True
+            session['userID'] = User.query.filter_by(Login=login, Password=password).first().ID
             session.modified = True  # инфа о том, что сессия была модифицирована
             return redirect('/')
         except:
@@ -161,6 +179,11 @@ def server_page(server_id):
 @app.errorhandler(404)
 def http_404_handler(error):
     return "<p>HTTP 404 Error Encountered</p>", 404
+
+
+@app.errorhandler(505)
+def http_404_handler(error):
+    return "<p>HTTP 505 Error Encountered</p>", 505
 
 
 if __name__ == '__main__':
