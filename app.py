@@ -116,7 +116,7 @@ def main_page():
 
 @app.route('/about')
 def about_page():
-    return render_template('Main_page.html')
+    return render_template('About.html')
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -174,6 +174,22 @@ def reg_page():
 @app.route('/server/<int:server_id>')
 def server_page(server_id):
     return render_template('Server_page.html')
+
+
+@app.route('/createserver')
+def creat_server_page():
+    return render_template('Create_server_page.html')
+
+
+@app.route('/editprofile')
+def edit_profile():
+    return render_template('Edit_profile.html')
+
+
+@app.route('/profile')
+def profile():
+    session['loggedIn'] = True
+    return render_template('Profile.html')
 
 
 @app.errorhandler(404)
