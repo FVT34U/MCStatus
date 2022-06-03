@@ -9,18 +9,18 @@
 <body class="text-center">
     
 <main class="form-signin d-flex justify-content-center p-5">
-  <form>
+  <form method="post">
     <a href="/">
       <img class="mb-4" src="../static/Ref/logo_mc.png" alt="" width="72" height="57">
     </a>
     <h1 class="h3 mb-3 fw-normal">Введите логин и пароль</h1>
 
     <div class="form-floating mb-2">
-      <input type="text" class="form-control" id="floatingInput" placeholder="Orange">
+      <input type="text" class="form-control" id="floatingInput" name="login" placeholder="Orange">
       <label for="floatingInput">Логин</label>
     </div>
     <div class="form-floating mb-2">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
       <label for="floatingPassword">Пароль</label>
     </div>
 
@@ -30,7 +30,7 @@
       </label>
     </div>
     <a href="/">
-      <button class="w-100 btn btn-lg btn-primary" type="button">Войти</button>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
     </a>
     
   </form>

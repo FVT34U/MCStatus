@@ -124,19 +124,15 @@ def login_page():
     if request.method == 'POST':
         login = request.form['login']
         password = request.form['password']
-        get_data = User.query.filter_by(Login=login).all()
-        for i in get_data:
-            if login in i.Login:
-                if password in i.Password:
-                    #print('Logged In!!!' + str(i.ID) + login + ' ' + password)
-                    print('Logged In!!!')
-                    session['loggedIn'] = True
-                    session['userID'] = i.ID
-                    session.modified = True
-                    return redirect('/')
+        get_data = User.query.filter_by(Login=login).first()
+        if login == get_data.Login and password == get_data.Password:
+            print('Logged In!!!')
+            session['loggedIn'] = True
+            session['userID'] = get_data.ID
+            session.modified = True
+            return redirect('/')
         else:
-            print('Invalid login or password!!!')
-            abort(404)
+            return redirect('/login')
     else:
         if 'loggedIn' in session:
             if session['loggedIn']:
@@ -156,6 +152,9 @@ def reg_page():
         bio = ''
         role = 'user'
         nickname = request.form['nickName']
+        if login == User.query.filter_by(Login=login).first().Login:
+            print('Login has been taken!')
+            return redirect('/reg')
         user1 = User(login=login, email=email, password=password, bio=bio, role=role, nickname=nickname)
         try:
             db.session.add(user1)
@@ -173,12 +172,16 @@ def reg_page():
 
 @app.route('/server/<int:server_id>')
 def server_page(server_id):
+    server = ServerPage.query.filter_by(ID=server_id).first()
     return render_template('Server_page.html')
 
 
-@app.route('/createserver')
-def creat_server_page():
-    return render_template('Create_server_page.html')
+@app.route('/createserver', methods=['POST', 'GET'])
+def create_server_page():
+    if request.method == 'POST':
+        return redirect('/')
+    else:
+        return render_template('Create_server_page.html')
 
 
 @app.route('/editprofile')
@@ -188,13 +191,13 @@ def edit_profile():
 
 @app.route('/profile')
 def profile():
-    session['loggedIn'] = True
+    session['loggedIn'] = True #чо бля, это тут вообще откуда и нахуя
     return render_template('Profile.html')
 
 
 @app.errorhandler(404)
 def http_404_handler(error):
-    return "<p>HTTP 404 Error Encountered</p>", 404
+    return render_template('404.html')
 
 
 @app.errorhandler(505)
