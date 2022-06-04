@@ -13,11 +13,11 @@ MCStatus - Создание сервера
       <p class="lead">Введите данные своего сервера</p>
     </div>
       <div class="col-md-7 col-lg-12">
-        <form class="needs-validation" novalidate="">
+        <form class="needs-validation" novalidate="" method="post">
           <div class="row g-3">
             <div class="col-sm-6">
               <label for="serverName" class="form-label">Название сервера</label>
-              <input type="text" class="form-control" id="serverName" placeholder="" value="" required="">
+              <input type="text" class="form-control" id="serverName" name="serverName" placeholder="" value="" required="">
               <div class="invalid-feedback">
                 Некорректное название сервера, используйте корректные символы
               </div>
@@ -25,7 +25,7 @@ MCStatus - Создание сервера
 
             <div class="col-sm-6">
               <label for="IP" class="form-label">IP адрес</label>
-              <input type="text" class="form-control" id="IP" placeholder="322.322.322.322" value="" required="">
+              <input type="text" class="form-control" id="IP" name="IP" placeholder="322.322.322.322" value="" required="">
               <div class="invalid-feedback">
                 Некорректный IP - адрес, используйте корректные символы
               </div>
@@ -33,7 +33,7 @@ MCStatus - Создание сервера
 
             <div class="col-12">
               <label for="version" class="form-label">Версия Minecraft</label>
-              <input type="text" class="form-control" id="version" placeholder="4.27" required="">
+              <input type="text" class="form-control" id="version" name="version" placeholder="4.27" required="">
               <div class="invalid-feedback">
                 Некорректная версия, используйте корректные символы
               </div>
@@ -41,26 +41,26 @@ MCStatus - Создание сервера
 
           <div class="col-12">
             <label for="Description" class="form-label">Описание</label>
-            <textarea class="form-control" aria-label="With textarea" id="Description"></textarea>
+            <textarea class="form-control" aria-label="With textarea" id="description" name="description"></textarea>
             <div class="invalid-feedback">
               Некорректное описание, используйте корректные символы
             </div>
           </div>
 
           <div class="input-group">
-            <input type="file" class="form-control" id="imgServer">
+            <input type="file" class="form-control" id="imgServer" name="imgServer">
             <label class="input-group-text" for="inputGroupFile02">Превью сервера</label>
           </div>
 
           <div class="col-12">
             <label for="tags" class="form-label">Теги</label>
-            <textarea class="form-control" aria-label="With textarea" id="tags" placeholder="Сурвайвал, VIP, есть донат."></textarea>
+            <textarea class="form-control" aria-label="With textarea" id="tags" name="tags" placeholder="Сурвайвал, VIP, есть донат."></textarea>
             <div class="invalid-feedback">
-              Некорректные теги, используйте корректные символы и пишите черз запятную
+              Некорректные теги, используйте корректные символы и пишите через запятую
             </div>
           </div>
           <a href="/server/0">
-            <button class="w-100 btn btn-primary btn-lg" type="button">Создать сервер</button>
+            <button class="w-100 btn btn-primary btn-lg" type="submit">Создать сервер</button>
           </a>
         </form>
       </div>

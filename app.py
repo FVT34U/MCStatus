@@ -1,5 +1,7 @@
-from flask import Flask, render_template, url_for, request, redirect, abort, session
+from flask import Flask, render_template, url_for, request, redirect, abort, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from mcstatus import JavaServer
+import os
 
 app = Flask(__name__, template_folder='templates')
 
@@ -7,6 +9,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1234@loc
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+UPLOAD_FOLDER = '/static/user_images'
+ALLOWED_EXTENSIONS = {'png', 'gif'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+def allowed_file(filename):
+    """ Функция проверки расширения файла """
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 class User(db.Model):
@@ -107,7 +120,7 @@ class ServerRate(db.Model):
 def main_page():
     if 'loggedIn' in session:
         if session['loggedIn']:
-            return render_template('Main_page.html')  # Подгрузить новую шапку
+            return render_template('Main_page.html', session=session)  # Подгрузить новую шапку
     else:
         session['loggedIn'] = False
         session.modified = True
@@ -125,14 +138,15 @@ def login_page():
         login = request.form['login']
         password = request.form['password']
         get_data = User.query.filter_by(Login=login).first()
-        if login == get_data.Login and password == get_data.Password:
-            print('Logged In!!!')
-            session['loggedIn'] = True
-            session['userID'] = get_data.ID
-            session.modified = True
-            return redirect('/')
-        else:
-            return redirect('/login')
+        if User.query.filter_by(Login=login).first() is not None:
+            if login == get_data.Login and password == get_data.Password:
+                print('Logged In!!!')
+                session['loggedIn'] = True
+                session['userID'] = get_data.ID
+                session.modified = True
+                return redirect('/')
+        flash('Вы ввели неверный логин или пароль, попробуйте ещё раз')
+        return redirect('/login')
     else:
         if 'loggedIn' in session:
             if session['loggedIn']:
@@ -152,7 +166,7 @@ def reg_page():
         bio = ''
         role = 'user'
         nickname = request.form['nickName']
-        if login == User.query.filter_by(Login=login).first().Login:
+        if User.query.filter_by(Login=login).first() is not None:
             print('Login has been taken!')
             return redirect('/reg')
         user1 = User(login=login, email=email, password=password, bio=bio, role=role, nickname=nickname)
@@ -173,26 +187,51 @@ def reg_page():
 @app.route('/server/<int:server_id>')
 def server_page(server_id):
     server = ServerPage.query.filter_by(ID=server_id).first()
-    return render_template('Server_page.html')
+    return render_template('Server_page.html', session=session, server=server)
 
 
 @app.route('/createserver', methods=['POST', 'GET'])
 def create_server_page():
     if request.method == 'POST':
-        return redirect('/')
+        server_name = request.form['serverName']
+        ip = request.form['IP']
+        version = request.form['version']
+        description = request.form['description']
+        tags = request.form['tags'].split(', ')
+        '''server_image = request.files['imgServer']
+        if server_image is None:
+            return redirect('/createserver')
+        if server_image.filename == '':
+            return redirect('/createserver')
+        if server_image and allowed_file(server_image.filename):
+            server_image.save(os.path.join(app.config['UPLOAD_FOLDER'], server_image.filename))
+        else:
+            return redirect('/createserver')'''
+        if ServerPage.query.filter_by(IP=ip).first() is not None:
+            print('This server is already in database!')
+            return redirect('/createserver')
+        server1 = ServerPage(name=server_name, ip=ip, version=version, description=description, image='', rating=0.,
+                             plugins=[], tags=tags, owner_id=session['userID'])
+        try:
+            db.session.add(server1)
+            db.session.commit()
+            return redirect('/server/' + str(ServerPage.query.filter_by(IP=ip).first().ID))
+        except:
+            print('DB ERROR!')
+            return redirect('/createserver')
     else:
-        return render_template('Create_server_page.html')
+        return render_template('Create_server_page.html', session=session)
 
 
 @app.route('/editprofile')
 def edit_profile():
-    return render_template('Edit_profile.html')
+    return render_template('Edit_profile.html', session=session)
 
 
-@app.route('/profile')
-def profile():
-    session['loggedIn'] = True #чо бля, это тут вообще откуда и нахуя
-    return render_template('Profile.html')
+@app.route('/profile/<int:user_id>')
+def profile(user_id):
+    user = User.query.filter_by(ID=user_id).first()
+    return render_template('Profile.html', session=session, user=user)
 
 
 @app.errorhandler(404)

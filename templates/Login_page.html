@@ -29,6 +29,9 @@
         <input type="checkbox" value="remember-me"> Остаться в системе
       </label>
     </div>
+    {% for msg in get_flashed_messages() %}
+      <div class="flash">{{msg}}</div>
+    {% endfor %}
     <a href="/">
       <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
     </a>

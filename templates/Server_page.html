@@ -1,7 +1,7 @@
 {% extends 'Base.html' %}
 
 {% block title %}
-MCStatus - Название сервера
+MCStatus - {{ server.Name }}
 {% endblock %}
 
 {% block body %}
@@ -14,8 +14,8 @@ MCStatus - Название сервера
       </a>
     </div>
     <div class="carousel-caption text-end text-server-page-carousel">
-      <h1>Лучший сервер Сереги</h1>
-      <h3 class="rating-server">Рейтиг сервера</h3>
+      <h1>{{ server.Name }}</h1>
+      <h3 class="rating-server">{{ server.Rating }}</h3>
     </div>
   </div>
   <div class="container d-flex p-3 justify-content-between">
@@ -23,19 +23,19 @@ MCStatus - Название сервера
       <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
         <div>
           <h6 class="mb-0">Владелец сервера</h6>
-          <p class="mb-0 opacity-75">Никнейм</p>
+          <p class="mb-0 opacity-75">{{ server.user.Nickname }}</p>
         </div>
       </div>
       <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
         <div>
           <h6 class="mb-0">Версия</h6>
-          <p class="mb-0 opacity-75">4.27</p>
+          <p class="mb-0 opacity-75">{{ server.Version }}</p>
         </div>
       </div>
       <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
         <div>
           <h6 class="mb-0">IP</h6>
-          <p class="mb-0 opacity-75">322.322.322.322</p>
+          <p class="mb-0 opacity-75">{{ server.IP }}</p>
         </div>
       </div>
     </div>
@@ -65,17 +65,12 @@ MCStatus - Название сервера
     <div class=" container">
       <div class="col-md-9">
         <h2 class="featurette-heading">Описание</h2>
-        <p class="lead">Я Серёга и это мой лучший сервер, заходи и плоти мне деньги. Делали его вместе с Мишой_322 и CCСуперАндреем. Живём на севере как в реальной жизни. Строим дома. Чужие дома не взрываем. Ой мама пришла. Я сейчас поем и приду, буду писать дальше описание сервера
+        <p class="lead">{{ server.Description }}
       </div>
       <div class="col-md-5 d-flex justify-content-lg-start align-items-end">
-        <span class="badge bg-success p-2 ms-1">Тег 1</span>
-        <span class="badge bg-success p-2 ms-1">Тег 2</span>
-        <span class="badge bg-success p-2 ms-1">Тег 3</span>
-        <span class="badge bg-success p-2 ms-1">Тег 4</span>
-        <span class="badge bg-success p-2 ms-1">Тег 5</span>
-        <span class="badge bg-success p-2 ms-1">Тег 6</span>
-        <span class="badge bg-success p-2 ms-1">Тег 7</span>
-        <span class="badge bg-success p-2 ms-1">Тег 8</span>
+        {% for tag in server.Tags %}
+          <span class="badge bg-success p-2 ms-1">{{ tag }}</span>
+        {% endfor %}
       </div>
   </div>   
     
