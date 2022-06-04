@@ -1,7 +1,7 @@
 {% extends 'Base.html' %}
 
 {% block title %}
-MCStatus - Профиль
+MCStatus - {{ user.Nickname }}
 {% endblock %}
 
 {% block body %}
@@ -11,13 +11,15 @@ MCStatus - Профиль
             <h2>Главный по серверу<h2>
         </div>
         <div class="col-lg-8">
-        <h2 class="display-5 fw-bold lh-1 mb-3">Ник</h2>
-        <p class="lead">Я Серёга классный парень</p>
-        <p class="lead">Serega@classny.da</p>
+        <h2 class="display-5 fw-bold lh-1 mb-3">{{ user.Nickname }}</h2>
+        <p class="lead">{{ user.Bio }}</p>
+        <p class="lead">{{ user.Email }}</p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          {% if user.ID == session['userID'] %}
           <a href="/editprofile">
             <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Редактировать</button>
           </a>
+          {% endif %}
         </div>
       </div>
     </div>
