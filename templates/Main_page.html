@@ -9,84 +9,27 @@ MCStatus
   <div class="container">
       <div class="row">
           <div class="list-group list-general-page">
-            <a href="/server/0" class="list-group-item list-group-item-action"><div class="card mb-3">
+            {% for s_page in servers %}
+            <a href="/server/{{ s_page.ID }}" class="list-group-item list-group-item-action"><div class="card mb-3">
               <img src="../static/Ref/Minecraft_page.png" class="card-img-top" alt="">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a href="/editprofile">
+                {% if session['isAdmin'] == True %}
+                <a href="/">
                   <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
                 </a>
+                {% endif %}
               </div>
               <div class="card-body">
-                <h5 class="card-title">Лучший сервер Сереги</h5>
-                <p class="card-text">Я Серёга и это мой лучший сервер, заходи и плоти мне деньги</p>
-                <p class="card-text">IP - 322.322.322.322</p>
-                <p class="card-text">Версия игры</p>
-                <p class="card-text">Рейтиг сервера</p>
+                <h5 class="card-title">{{ s_page.Name }}</h5>
+                <p class="card-text">{{ s_page.Description }}</p>
+                <p class="card-text">IP - {{ s_page.IP }}</p>
+                <p class="card-text">Версия - {{ s_page.Version }}</p>
+                <p class="card-text">Рейтинг сервера - {{ s_page.Rating }}</p>
               </div>
             </div></a>
-            <a href="/server/0" class="list-group-item list-group-item-action"><div class="card mb-3">
-              <img src="../static/Ref/Minecraft_page.png" class="card-img-top" alt="...">
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a href="/editprofile">
-                  <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
-                </a>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Лучший сервер Сереги</h5>
-                <p class="card-text">Я Серёга и это мой лучший сервер, заходи и плоти мне деньги</p>
-                <p class="card-text">IP - 322.322.322.322</p>
-                <p class="card-text">Версия игры</p>
-                <p class="card-text">Рейтиг сервера</p>
-              </div>
-            </div></a>
-          <a href="/server/0" class="list-group-item list-group-item-action"><div class="card mb-3">
-            <img src="../static/Ref/Minecraft_page.png" class="card-img-top" alt="...">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <a href="/editprofile">
-                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
-              </a>
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">Лучший сервер Сереги</h5>
-              <p class="card-text">Я Серёга и это мой лучший сервер, заходи и плоти мне деньги</p>
-              <p class="card-text">IP - 322.322.322.322</p>
-              <p class="card-text">Версия игры</p>
-              <p class="card-text">Рейтиг сервера</p>
-            </div>
-          </div></a>
-          <a href="/server/0" class="list-group-item list-group-item-action"><div class="card mb-3">
-            <img src="../static/Ref/Minecraft_page.png" class="card-img-top" alt="...">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <a href="/editprofile">
-                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
-              </a>
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">Лучший сервер Сереги</h5>
-              <p class="card-text">Я Серёга и это мой лучший сервер, заходи и плоти мне деньги</p>
-              <p class="card-text">IP - 322.322.322.322</p>
-              <p class="card-text">Версия игры</p>
-              <p class="card-text">Рейтиг сервера</p>
-            </div>
-          </div></a>
-          <a href="/server/0" class="list-group-item list-group-item-action"><div class="card mb-3">
-            <img src="../static/Ref/Minecraft_page.png" class="card-img-top" alt="...">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <a href="/editprofile">
-                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
-              </a>
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">Лучший сервер Сереги</h5>
-              <p class="card-text">Я Серёга и это мой лучший сервер, заходи и плоти мне деньги</p>
-              <p class="card-text">IP - 322.322.322.322</p>
-              <p class="card-text">Версия игры</p>
-              <p class="card-text">Рейтиг сервера</p>
-            </div>
+            {% endfor %}
           </div>
-        </a>
-      </div>                
-    </div>
+      </div>
       <nav aria-label="...">
         <ul class="pagination p-4">
           <li class="page-item disabled">

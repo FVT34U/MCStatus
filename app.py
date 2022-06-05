@@ -118,18 +118,22 @@ class ServerRate(db.Model):
 
 @app.route('/')
 def main_page():
+    servers = ServerPage.query.all()
     if 'loggedIn' in session:
         if session['loggedIn']:
-            return render_template('Main_page.html', session=session)  # Подгрузить новую шапку
+            if User.query.filter_by(ID=session['userID']).first().Role == 'admin':
+                session['isAdmin'] = True
+            return render_template('Main_page.html', session=session, servers=servers)  # Подгрузить новую шапку
     else:
         session['loggedIn'] = False
+        session['isAdmin'] = False
         session.modified = True
-    return render_template('Main_page.html')
+    return render_template('Main_page.html', session=session, servers=servers)
 
 
 @app.route('/about')
 def about_page():
-    return render_template('About.html')
+    return render_template('About.html', session=session)
 
 
 @app.route('/login', methods=['POST', 'GET'])
