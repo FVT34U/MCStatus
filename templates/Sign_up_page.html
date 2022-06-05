@@ -53,6 +53,9 @@
                   Некорректная почта, введите корректные символы
                 </div>
               </div>
+              {% for msg in get_flashed_messages() %}
+                <div class="flash">{{msg}}</div>
+              {% endfor %}
               <a href="/">
                 <button class="w-100 btn btn-primary btn-lg" type="submit">Зарегистрироваться</button>
               </a>
