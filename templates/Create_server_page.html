@@ -59,6 +59,9 @@ MCStatus - Создание сервера
               Некорректные теги, используйте корректные символы и пишите через запятую
             </div>
           </div>
+            {% for msg in get_flashed_messages() %}
+                <div class="flash">{{msg}}</div>
+            {% endfor %}
           <a href="/server/0">
             <button class="w-100 btn btn-primary btn-lg" type="submit">Создать сервер</button>
           </a>

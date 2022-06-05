@@ -13,11 +13,11 @@ MCStatus - Редактировать профиль
         <p class="lead">Изменить данные своего профиля и сохраните их</p>
       </div>
         <div class="col-md-7 col-lg-12">
-          <form class="needs-validation" novalidate="">
+          <form class="needs-validation" novalidate="" method="post">
             <div class="row g-3">
               <div class="col-sm-6">
                 <label for="nickName" class="form-label">Введите новый ник</label>
-                <input type="text" class="form-control" id="nickName" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" value="" required="">
+                <input type="text" class="form-control" id="nickName" name="nickName" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" value="" required="">
                 <div class="invalid-feedback">
                   Некорректный ник, используйте корректные символы
                 </div>
@@ -25,12 +25,12 @@ MCStatus - Редактировать профиль
   
               <div class="col-sm-6">
                 <label for="nickName" class="form-label">Нынешний ник</label>
-                <p class="lead">Ник</p>
+                <p class="lead">{{ user.Nickname }}</p>
               </div>
 
               <div class="col-sm-6">
                 <label for="email" class="form-label">Введите новую почту</label>
-                <input type="text" class="form-control" id="email" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" value="" required="">
+                <input type="text" class="form-control" id="email" name="email" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" value="" required="">
                 <div class="invalid-feedback">
                   Некорректный email, используйте корректные символы
                 </div>
@@ -38,35 +38,37 @@ MCStatus - Редактировать профиль
 
               <div class="col-sm-6">
                 <label for="nickName" class="form-label">Нынешний email</label>
-                <p class="lead">Serega@classny.da</p>
+                <p class="lead">{{ user.Email }}</p>
               </div>
   
               <div class="col-sm-6">
-                <label for="version" class="form-label">Новый пароль</label>
-                <input type="text" class="form-control" id="version" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" required="">
+                <label for="password" class="form-label">Новый пароль</label>
+                <input type="text" class="form-control" id="password" name="password" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" required="">
                 <div class="invalid-feedback">
                   Некорректный пароль, используйте корректные символы
                 </div>
               </div>
 
               <div class="col-sm-6">
-                <label for="version" class="form-label">Повторите пароль</label>
-                <input type="text" class="form-control" id="version" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" required="">
+                <label for="newPassword" class="form-label">Повторите пароль</label>
+                <input type="text" class="form-control" id="newPassword" name="newPassword" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" required="">
                 <div class="invalid-feedback">
                   Некорректный пароль, используйте корректные символы
                 </div>
               </div>
   
             <div class="col-12">
-              <label for="Description" class="form-label">Описание</label>
-              <textarea class="form-control" aria-label="With textarea" id="Description"></textarea>
+              <label for="description" class="form-label">Описание</label>
+              <textarea class="form-control" aria-label="With textarea" id="description" name="description"></textarea>
               <div class="invalid-feedback">
                 Некорректное описание, используйте корректные символы
               </div>
             </div>
-
+              {% for msg in get_flashed_messages() %}
+                <div class="flash">{{msg}}</div>
+              {% endfor %}
             <a href="/profile">
-              <button class="w-100 btn btn-primary btn-lg" type="button">Сохранить изменения</button>
+              <button class="w-100 btn btn-primary btn-lg" type="submit">Сохранить изменения</button>
             </a>
           </form>
         </div>

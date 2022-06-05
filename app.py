@@ -167,7 +167,13 @@ def reg_page():
         role = 'user'
         nickname = request.form['nickName']
         if User.query.filter_by(Login=login).first() is not None:
-            print('Login has been taken!')
+            flash("Такой логин уже занят, попробуйте другой")
+            return redirect('/reg')
+        if User.query.filter_by(Email=email).first() is not None:
+            flash("На этот адрес электронной почты уже зарегистрирован аккаунт, попробуйте другой")
+            return redirect('/reg')
+        if User.query.filter_by(Nickname=nickname).first() is not None:
+            flash("Такой никнейм уже занят, попробуйте другой")
             return redirect('/reg')
         user1 = User(login=login, email=email, password=password, bio=bio, role=role, nickname=nickname)
         try:
@@ -178,7 +184,7 @@ def reg_page():
             session.modified = True  # инфа о том, что сессия была модифицирована
             return redirect('/')
         except:
-            print('DB ERROR!!!')
+            flash('Ошибка при занесении данных в базу, обратитесь к администратору')
             return redirect('/reg')
     else:
         return render_template('Sign_up_page.html')
@@ -208,7 +214,7 @@ def create_server_page():
         else:
             return redirect('/createserver')'''
         if ServerPage.query.filter_by(IP=ip).first() is not None:
-            print('This server is already in database!')
+            flash('Сервер с таким IP-адресом уже находится в системе!')
             return redirect('/createserver')
         server1 = ServerPage(name=server_name, ip=ip, version=version, description=description, image='', rating=0.,
                              plugins=[], tags=tags, owner_id=session['userID'])
@@ -217,15 +223,54 @@ def create_server_page():
             db.session.commit()
             return redirect('/server/' + str(ServerPage.query.filter_by(IP=ip).first().ID))
         except:
-            print('DB ERROR!')
+            flash('Ошибка при занесении данных в базу, обратитесь к администратору')
             return redirect('/createserver')
     else:
         return render_template('Create_server_page.html', session=session)
 
 
-@app.route('/editprofile')
+@app.route('/editprofile', methods=['POST', 'GET'])
 def edit_profile():
-    return render_template('Edit_profile.html', session=session)
+    if request.method == 'POST':
+        if 'loggedIn' not in session or 'userID' not in session:
+            return redirect('/')
+        if not session['loggedIn'] or session['userID'] is None:
+            return redirect('/')
+        nickname = request.form['nickName']
+        email = request.form['email']
+        password = request.form['password']
+        new_password = request.form['newPassword']
+        description = request.form['description']
+        if User.query.filter_by(Email=email).first() is not None:
+            flash("На этот адрес электронной почты уже зарегистрирован аккаунт, попробуйте другой")
+            return redirect('/editprofile')
+        if User.query.filter_by(Nickname=nickname).first() is not None:
+            flash("Такой никнейм уже занят, попробуйте другой")
+            return redirect('/editprofile')
+        if password != new_password:
+            flash("Введенные пароли не совпадают")
+            return redirect('/editprofile')
+        if password == User.query.filter_by(ID=session['userID']).first().Password:
+            flash("Новый пароль не должен совпадать со старым")
+            return redirect('/editprofile')
+        user1 = User.query.filter_by(ID=session['userID']).first()
+        if nickname != '':
+            user1.Nickname = nickname
+        if email != '':
+            user1.Email = email
+        if password != '' and new_password != '':
+            user1.Password = password
+        if description != '':
+            user1.Bio = description
+        db.session.add(user1)
+        db.session.commit()
+        return redirect('/profile/' + str(session['userID']))
+    else:
+        if 'loggedIn' in session and 'userID' in session:
+            if session['loggedIn'] and session['userID'] is not None:
+                user = User.query.filter_by(ID=session['userID']).first()
+                return render_template('Edit_profile.html', session=session, user=user)
+        return redirect('/')
 
 
 @app.route('/profile/<int:user_id>')
