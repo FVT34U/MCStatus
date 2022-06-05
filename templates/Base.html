@@ -23,12 +23,13 @@
               </ul>
     
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-              <input type="search" class="form-control form-control-dark" placeholder="Поиск по IP..." aria-label="Search">
+              <input type="search" class="form-control form-control-dark shadow-none" placeholder="Поиск по IP..." aria-label="Search">
             </form>
     
             <div class="text-end justify-content-end">
               {% if session['loggedIn'] == True %}
                   <a href="/profile/{{ session['userID'] }}" type="button" class="btn btn-outline-light">Профиль</a>
+                  <a href="/login" type="button" class="btn btn-outline-light me-2">Выйти</a>
               {% else %}
                   <a href="/login" type="button" class="btn btn-outline-light me-2">Войти</a>
                   <a href="/reg" type="button" class="btn btn-outline-light">Регистрация</a>

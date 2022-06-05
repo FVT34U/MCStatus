@@ -282,6 +282,10 @@ def profile(user_id):
     user = User.query.filter_by(ID=user_id).first()
     return render_template('Profile.html', session=session, user=user)
 
+@app.route('/editserver')
+def editserver():
+    return render_template('Edit_Server_page.html')
+
 
 @app.errorhandler(404)
 def http_404_handler(error):
