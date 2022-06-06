@@ -113,7 +113,7 @@ MCStatus - {{ server.Name }}
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end py-1">
                     {% if session['isAdmin'] == True or session['userID'] == comment.OwnerID %}
                     <a href="/comment/{{ comment.ID }}/del" >
-                      <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
+                      <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
                     </a>
                     {% endif %}
                   </div>
@@ -131,11 +131,12 @@ MCStatus - {{ server.Name }}
             {% if session['isAdmin'] == True or session['userID'] == server.OwnerID %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
               <a href="/server/{{ server.ID }}/del">
-                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
+                <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
               </a>
             </div>
             {% endif %}
           </div>
+        {% if session['loggedIn'] == True %}
           <div class="col-md-8">
             <div class="py-4">
               <form class="needs-validation" novalidate="" method="post">
@@ -147,26 +148,28 @@ MCStatus - {{ server.Name }}
             </div>
             <div>
               <a href="/" >
-                <button class="w-60 btn btn-primary btn-lg" type="submit">Отправить комментарий</button>
+                <button class="w-60 btn btn-primary btn-lg" type="button">Отправить комментарий</button>
               </a>
             </div>
           </div>
+        </form>
+          <form class="form2" novalidate="" method="post">
           <div class="col-md-4 py-6">
             <div class = "d-md-flex justify-content-md-end">
               <div class="input-group input-group-sm mb-3" >
                 <span class="input-group-text " id="inputGroup-sizing-sm">Оценка</span>
-                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                <input type="text" class="form-control" id="score" name="score" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
               </div>
             </div>
             <div class = "d-md-flex justify-content-md-end align-items-end">
-              <a href="/" class="py-5">
+              <a href="/server/{{ server.ID }}/score" class="py-5">
                 <button class="w-20 btn btn-primary btn-lg " type="submit">Отправить оценку</button>
               </a>
             </div>
           </div>
+          </form>
+        {% endif %}
           {% for msg in get_flashed_messages() %}
                 <div class="flash">{{msg}}</div>
           {% endfor %}
-          
-        </form>
 {% endblock %}
