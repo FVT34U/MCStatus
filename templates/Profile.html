@@ -36,18 +36,6 @@ MCStatus - {{ user.Nickname }}
           <a href="/server/{{ server.ID }}" class="list-group-item list-group-item-action">
             <div class="card mb-3">
             <img src="../static/Ref/Minecraft_page.png" class="card-img-top" alt="">
-            {% if user.ID == session['userID'] %}
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a href="/editprofile">
-                  <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
-                </a>
-              </div>
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a href="/editserver">
-                  <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Редактировать</button>
-                </a>
-              </div>
-            {% endif %}
             <div class="card-body">
               <h5 class="card-title">{{ server.Name }}</h5>
               <p class="card-text">{{ server.Description }}</p>

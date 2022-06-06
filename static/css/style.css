@@ -52,7 +52,27 @@ body{
 }
 
 .u-shadow-v18 {
-    box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.15);
+    box-shadow: 5px 7px 25px -6px rgb(65, 160, 65);
+}
+
+.comment-text {
+    color: rgb(65, 160, 65);
+    text-decoration: none;
+}
+
+.comment-text:hover {
+    color: rgba(0, 0, 0, 0.768);
+    text-decoration: none;
+}
+
+.text-owner-user{
+    color: rgb(65, 160, 65);
+    text-decoration: none;
+}
+
+.text-owner-user:hover {
+    color: #212529;
+    text-decoration: none;
 }
 
 .g-color-gray-dark-v4 {

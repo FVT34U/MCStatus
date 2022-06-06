@@ -1,0 +1,62 @@
+{% extends 'Base.html' %}
+
+{% block title %}
+MCStatus - Поиск
+{% endblock %}
+
+{% block body %}
+<main class="main-sever-page">  
+    <img src="../static/Ref/Minecraft_page.png" class="bd-placeholder-img" width="100%" height="100%" aria-hidden="true" alt="">
+    <div class="container">
+      <div class="flex justify-content-start">
+      </div>
+      <div class="carousel-caption text-end text-server-page-carousel">
+        <h1>{{ server.Name }}</h1>
+        <h2 class="rating-server">2/20</h2>
+      </div>
+    </div>
+    <div class="container d-flex p-3 justify-content-between">
+      <div class="list-group col-6 col-md-5">
+        <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
+          <div>
+            <h6 class="mb-0">Версия</h6>
+            <p class="mb-0 opacity-75">{{ server.Version }}</p>
+          </div>
+        </div>
+        <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
+          <div>
+            <h6 class="mb-0">IP</h6>
+            <p class="mb-0 opacity-75">{{ server.IP }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="list-group col-6 col-md-5">
+        {% for plugin in server.Plugins %}
+          <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
+            <div>
+              <p class="mb-0 opacity-75">{{ plugin }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+      <hr class="featurette-divider">
+  
+      <div class=" container">
+        <div class="row">
+        <div class="col-md-9">
+          <h2 class="featurette-heading">Описание</h2>
+          <p class="lead">{{ server.Description }}
+        </div>
+        <div class="col-md-3 d-flex justify-content-lg-end align-items-center">
+          <h2 class="featurette-heading">Онлайн</h2>
+          {% if True %}
+          <svg height="100" width="100">
+            <circle cx="50" cy="50" r="40" fill="rgb(65, 160, 65)" />
+         </svg>
+         {% else %}
+         <svg height="100" width="100">
+          <circle cx="50" cy="50" r="40" fill="red" />
+         </svg>
+         {% endif %}  
+{% endblock %}

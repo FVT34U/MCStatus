@@ -9,14 +9,10 @@ MCStatus - {{ server.Name }}
   <img src="../static/Ref/Minecraft_page.png" class="bd-placeholder-img" width="100%" height="100%" aria-hidden="true" alt="">
   <div class="container">
     <div class="flex justify-content-start">
-      {% if session['isAdmin'] == True %}
-        <a href="/editprofile">
-          <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
-        </a>
-      {% endif %}
     </div>
     <div class="carousel-caption text-end text-server-page-carousel">
       <h1>{{ server.Name }}</h1>
+      <h2 class="rating-server">2/20</h2>
       <h3 class="rating-server">{{ server.Rating }}</h3>
     </div>
   </div>
@@ -25,7 +21,7 @@ MCStatus - {{ server.Name }}
       <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
         <div>
           <h6 class="mb-0">Владелец сервера</h6>
-          <a href="/profile/{{ server.user.ID }}">
+          <a href="/profile/{{ server.user.ID }}" class="text-owner-user">
             <p class="mb-0 opacity-75">{{ server.user.Nickname }}</p>
           </a>
         </div>
@@ -56,15 +52,29 @@ MCStatus - {{ server.Name }}
     <hr class="featurette-divider">
 
     <div class=" container">
+      <div class="row">
       <div class="col-md-9">
         <h2 class="featurette-heading">Описание</h2>
         <p class="lead">{{ server.Description }}
+      </div>
+      <div class="col-md-3 d-flex justify-content-lg-end align-items-center">
+        <h2 class="featurette-heading">Онлайн</h2>
+        {% if True %}
+        <svg height="100" width="100">
+          <circle cx="50" cy="50" r="40" fill="rgb(65, 160, 65)" />
+       </svg>
+       {% else %}
+       <svg height="100" width="100">
+        <circle cx="50" cy="50" r="40" fill="red" />
+       </svg>
+       {% endif %}
       </div>
       <div class="col-md-5 d-flex justify-content-lg-start align-items-end">
         {% for tag in server.Tags %}
           <span class="badge bg-success p-2 ms-1">{{ tag }}</span>
         {% endfor %}
       </div>
+    </div>
   </div>   
     
     <hr class="featurette-divider">
@@ -76,23 +86,23 @@ MCStatus - {{ server.Name }}
               <div class="media g-mb-30 media-comment">
                   <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
                     <div class="g-mb-15">
-                      <a href="/profile/{{ comment.OwnerID }}">
+                      <a href="/profile/{{ comment.OwnerID }}" class="comment-text">
                         <h5 class="h5 g-color-gray-dark-v1 mb-0">{{ User.query.filter_by(ID=comment.OwnerID).first().Nickname }}</h5>
                       </a>
                       <span class="g-color-gray-dark-v4 g-font-size-12"></span>
                     </div>
               
-                    <p>{{ comment.Text }}</p>
+                    <p class="px-2 py-2">{{ comment.Text }}</p>
               
                     <ul class="list-inline d-sm-flex my-0">
                       <li class="list-inline-item g-mr-20">
-                        <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
+                        <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover">
                           <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i>
                           Like: {{ comment.CountLikes }}
                         </a>
                       </li>
                       <li class="list-inline-item g-mr-20">
-                        <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
+                        <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover">
                           <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i>
                           Dislike: {{ comment.CountDislikes }}
                         </a>
@@ -109,5 +119,30 @@ MCStatus - {{ server.Name }}
               </div>
           </div>
           {% endfor %}
+          <div class="col-md-4">
+            {% if session['isAdmin'] == True %}
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="/editserver">
+                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Редактировать</button>
+              </a>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="/editprofile">
+                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
+              </a>
+            </div>
+            {% endif %}
+          </div>
+          <div class="col-md-8">
+            <div class="py-4">            
+              <label for="comment" class="form-label ">Написать комментариий</label>
+              <textarea class="form-control" aria-label="With textarea" id="comment" name="comment" placeholder=""></textarea>
+              <div class="invalid-feedback">
+                Некорректные комментариий, используйте корректные символы
+              </div>
+            </div>
+          </div>
+          <a href="/server/0" class="py-2">
+            <button class="w-60 btn btn-primary btn-lg" type="submit">Отправить комментариий</button>
       </div>
 {% endblock %}
