@@ -97,22 +97,22 @@ MCStatus - {{ server.Name }}
               
                     <ul class="list-inline d-sm-flex my-0">
                       <li class="list-inline-item g-mr-20">
-                        <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover">
+                        <a class="u-link-v5 g-color-primary--hover like-text">
                           <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i>
                           Like: {{ comment.CountLikes }}
                         </a>
                       </li>
                       <li class="list-inline-item g-mr-20">
-                        <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover">
+                        <a class="u-link-v5 g-color-primary--hover dislike-text">
                           <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i>
                           Dislike: {{ comment.CountDislikes }}
                         </a>
                       </li>
                     </ul>
                   </div>
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end py-1">
                     {% if session['isAdmin'] == True or session['userID'] == comment.OwnerID %}
-                    <a href="/comment/{{ comment.ID }}/del">
+                    <a href="/comment/{{ comment.ID }}/del" >
                       <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
                     </a>
                     {% endif %}
@@ -145,13 +145,28 @@ MCStatus - {{ server.Name }}
                   Некорректные комментарий, используйте корректные символы
                 </div>
             </div>
+            <div>
+              <a href="/" >
+                <button class="w-60 btn btn-primary btn-lg" type="submit">Отправить комментарий</button>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-4 py-6">
+            <div class = "d-md-flex justify-content-md-end">
+              <div class="input-group input-group-sm mb-3" >
+                <span class="input-group-text " id="inputGroup-sizing-sm">Оценка</span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+              </div>
+            </div>
+            <div class = "d-md-flex justify-content-md-end align-items-end">
+              <a href="/" class="py-5">
+                <button class="w-20 btn btn-primary btn-lg " type="submit">Отправить оценку</button>
+              </a>
+            </div>
           </div>
           {% for msg in get_flashed_messages() %}
                 <div class="flash">{{msg}}</div>
           {% endfor %}
-          <a href="/" class="py-2">
-            <button class="w-60 btn btn-primary btn-lg" type="submit">Отправить комментарий</button>
-          </a>
+          
         </form>
-      </div>
 {% endblock %}
