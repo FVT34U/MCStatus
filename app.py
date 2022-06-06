@@ -203,13 +203,18 @@ def reg_page():
 @app.route('/server/<int:server_id>', methods=['POST', 'GET'])
 def server_page(server_id):
     if request.method == 'POST':
-        comment = request.form['new_comment']
-        c1 = Comment(owner_id=session['userID'], server_page_id=session['curServerID'], count_like=0, count_dislike=0, text=comment)
         try:
-            db.session.add(c1)
-            db.session.commit()
+            a = request.form['new_comment']
         except:
-            flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+            return redirect('/server/' + str(server_id) + '/score')
+        if request.form['new_comment'] != '':
+            comment = request.form['new_comment']
+            c1 = Comment(owner_id=session['userID'], server_page_id=session['curServerID'], count_like=0, count_dislike=0, text=comment)
+            try:
+                db.session.add(c1)
+                db.session.commit()
+            except:
+                flash('Ошибка при занесении данных в базу, обратитесь к администратору')
         return redirect('/server/' + str(session['curServerID']))
     else:
         server = ServerPage.query.filter_by(ID=server_id).first()
@@ -373,6 +378,37 @@ def del_server(server_id):
     except:
         flash('Ошибка при занесении данных в базу, обратитесь к администратору')
         return redirect('/server/' + str(session['curServerID']))
+
+
+@app.route('/server/<int:server_id>/score', methods=['POST', 'GET'])
+def score_server(server_id):
+    if session['loggedIn']:
+        if request.form['score'] != '':
+            if 0 < int(request.form['score']) <= 5:
+                if ServerRate.query.filter_by(ServerPageID=server_id, UserID=session['userID']).first() is None:
+                    score = request.form['score']
+                    sr1 = ServerRate(server_page_id=server_id, user_id=session['userID'], rate_number=int(score))
+                    try:
+                        db.session.add(sr1)
+                        db.session.commit()
+                    except:
+                        flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+                else:
+                    score = request.form['score']
+                    sr1 = ServerRate.query.filter_by(ServerPageID=server_id, UserID=session['userID']).first()
+                    sr1.RateNumber = int(score)
+                    try:
+                        db.session.add(sr1)
+                        db.session.commit()
+                    except:
+                        flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+            else:
+                flash('Оценка должна быть от 1 до 5')
+        else:
+            flash("Значение оценки не должно быть пустым")
+    else:
+        flash("Вы не вошли в аккаунт")
+    return redirect('/server/' + str(session['curServerID']))
 
 
 @app.route('/search')
