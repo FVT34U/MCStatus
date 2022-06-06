@@ -65,6 +65,26 @@ body{
     text-decoration: none;
 }
 
+.like-text {
+    color: rgb(65, 160, 65);
+    text-decoration: none;
+}
+
+.like-text:hover {
+    color: rgba(0, 0, 0, 0.768);
+    text-decoration: none;
+}
+
+.dislike-text {
+    color: red !important;
+    text-decoration: none;
+}
+
+.dislike-text:hover {
+    color: rgba(0, 0, 0, 0.768) !important;
+    text-decoration: none;
+}
+
 .text-owner-user{
     color: rgb(65, 160, 65);
     text-decoration: none;
@@ -111,6 +131,10 @@ body{
 
 .list-general-page{
     padding-top: 10%;
+}
+
+.form-control:hover, .form-control:active, .form-control:focus  {
+    border-color: rgba(0, 0, 0, 0.512);
 }
 
 
@@ -422,4 +446,9 @@ body{
     height: 18%;
     border-radius: 100%;
     background: rgba(0, 0, 0, 0.2);
+}
+
+.py-6{
+    padding-top: 3.5rem!important;
+    padding-bottom: 3.5rem!important;
 }

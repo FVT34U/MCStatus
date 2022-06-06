@@ -22,9 +22,16 @@
                 {% endif %}
               </ul>
     
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-              <input type="search" class="form-control form-control-dark shadow-none" placeholder="Поиск по IP..." aria-label="Search">
-            </form>
+            <form class="col-12 col-lg-auto mb-lg-0">
+              <div class="row">
+                <div class="col-md-2">
+                  <a href="/exit" type="button" class="btn btn-outline-light"><img src="../static/Ref/white_lupa.png" alt="" width="20" height="20"></a>  
+                </div>
+                <div class="col-md-9">
+                  <input type="search" class="form-control form-control-dark shadow-none" placeholder="Поиск по IP..." aria-label="Search">
+                </div>                
+              </div>
+              </form>
     
             <div class="text-end justify-content-end">
               {% if session['loggedIn'] == True %}
