@@ -13,11 +13,6 @@ MCStatus
             <a href="/server/{{ s_page.ID }}" class="list-group-item list-group-item-action"><div class="card mb-3">
               <img src="../static/Ref/Minecraft_page.png" class="card-img-top" alt="">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                {% if session['isAdmin'] == True %}
-                <a href="/">
-                  <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
-                </a>
-                {% endif %}
               </div>
               <div class="card-body">
                 <h5 class="card-title">{{ s_page.Name }}</h5>

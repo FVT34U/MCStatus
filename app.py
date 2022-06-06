@@ -334,6 +334,10 @@ def _exit():
     return redirect('/')
 
 
+@app.route('/search')
+def search():
+    return render_template('Search.html')
+
 @app.errorhandler(404)
 def http_404_handler(error):
     return render_template('404.html')
