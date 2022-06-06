@@ -25,7 +25,7 @@ MCStatus - Редактировать сервер
   
             <div class="col-sm-6">
                 <label for="serverName" class="form-label">Нынешнее название сервера</label>
-                <p class="lead"></p>
+                <p class="lead">{{ server.Name }}</p>
             </div>
 
             <div class="col-sm-6">
@@ -38,7 +38,7 @@ MCStatus - Редактировать сервер
 
             <div class="col-sm-6">
                 <label for="version" class="form-label">Нынешняя версия</label>
-                <p class="lead"></p>
+                <p class="lead">{{ server.Version }}</p>
             </div>
   
             <div class="col-sm-6">
@@ -51,7 +51,7 @@ MCStatus - Редактировать сервер
 
             <div class="col-sm-6">
                 <label for="version" class="form-label">Нынешний IP</label>
-                <p class="lead"></p>
+                <p class="lead">{{ server.IP }}</p>
             </div>
 
   
@@ -65,7 +65,7 @@ MCStatus - Редактировать сервер
 
             <div class="col-sm-6">
                 <label for="description" class="form-label">Нынешнее описание</label>
-                <p class="lead"></p>
+                <p class="lead">{{ server.Description }}</p>
             </div>
 
             <div class="col-sm-6">
@@ -78,12 +78,12 @@ MCStatus - Редактировать сервер
   
             <div class="col-sm-6">
                   <label for="tags" class="form-label">Нынешние теги</label>
-                  <p class="lead"></p>
+                  <p class="lead">{{ server.Tags }}</p>
             </div>
 
             <div class="col-sm-6">
-                <label for="plagins" class="form-label">Новые плагины</label>
-                <textarea class="form-control" aria-label="With textarea" id="plagins" name="plagins" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились"></textarea>
+                <label for="plugins" class="form-label">Новые плагины</label>
+                <textarea class="form-control" aria-label="With textarea" id="plugins" name="plugins" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились"></textarea>
                 <div class="invalid-feedback">
                     Некорректные плагины, используйте корректные символы и пишите через запятую
                 </div>
@@ -91,11 +91,13 @@ MCStatus - Редактировать сервер
   
             <div class="col-sm-6">
                   <label for="description" class="form-label">Нынешние плагины</label>
-                  <p class="lead"></p>
+                  <p class="lead">{{ server.Plugins }}</p>
             </div>
 
             <div class="flash"></div>
-      
+            {% for msg in get_flashed_messages() %}
+                <div class="flash">{{msg}}</div>
+            {% endfor %}
             <a href="/profile">
               <button class="w-100 btn btn-primary btn-lg" type="submit">Сохранить изменения</button>
             </a>

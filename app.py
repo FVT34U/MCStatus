@@ -197,7 +197,8 @@ def reg_page():
 @app.route('/server/<int:server_id>')
 def server_page(server_id):
     server = ServerPage.query.filter_by(ID=server_id).first()
-    return render_template('Server_page.html', session=session, server=server)
+    session['curServerID'] = server_id
+    return render_template('Server_page.html', session=session, server=server, User=User)
 
 
 @app.route('/createserver', methods=['POST', 'GET'])
@@ -282,9 +283,55 @@ def profile(user_id):
     user = User.query.filter_by(ID=user_id).first()
     return render_template('Profile.html', session=session, user=user)
 
-@app.route('/editserver')
-def editserver():
-    return render_template('Edit_Server_page.html')
+
+@app.route('/editserver', methods=['POST', 'GET'])
+def edit_server():
+    if request.method == 'POST':
+        if 'loggedIn' not in session or 'userID' not in session:
+            return redirect('/')
+        if not session['loggedIn'] or session['userID'] is None:
+            return redirect('/')
+        if session['userID'] != ServerPage.query.filter_by(ID=session['curServerID']).first().OwnerID:
+            return redirect('/')
+        server_name = request.form['serverName']
+        version = request.form['version']
+        ip = request.form['IP']
+        description = request.form['description']
+        tags = request.form['tags']
+        plugins = request.form['plugins']
+        if server_name != '' and ServerPage.query.filter_by(Name=server_name).first() is not None:
+            flash("Такое название сервера уже занято, попробуйте другое")
+            return redirect('/editserver')
+        server1 = ServerPage.query.filter_by(ID=session['curServerID']).first()
+        if server_name != '':
+            server1.Name = server_name
+        if version != '':
+            server1.Version = version
+        if ip != '':
+            server1.IP = ip
+        if description != '':
+            server1.Description = description
+        if tags != '':
+            server1.Tags = tags.split(', ')
+        if plugins != '':
+            server1.Plugins = plugins.split(', ')
+        db.session.add(server1)
+        db.session.commit()
+        return redirect('/server/' + str(session['curServerID']))
+    else:
+        if session['userID'] != ServerPage.query.filter_by(ID=session['curServerID']).first().OwnerID:
+            return redirect('/')
+        server = ServerPage.query.filter_by(ID=session['curServerID']).first()
+        return render_template('Edit_Server_page.html', session=session, server=server)
+
+
+@app.route('/exit')
+def _exit():
+    session.pop('isAdmin', None)
+    session.pop('userID', None)
+    session.pop('curServerID', None)
+    session['loggedIn'] = False
+    return redirect('/')
 
 
 @app.errorhandler(404)
