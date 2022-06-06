@@ -53,8 +53,8 @@ MCStatus - Создание сервера
           </div>
 
           <div class="col-12">
-            <label for="plagins" class="form-label">Плагины</label>
-            <textarea class="form-control" aria-label="With textarea" id="plagins" name="plagins" placeholder="Moon322, Pivo_6.0"></textarea>
+            <label for="plugins" class="form-label">Плагины</label>
+            <textarea class="form-control" aria-label="With textarea" id="plugins" name="plugins" placeholder="Moon322, Pivo_6.0"></textarea>
             <div class="invalid-feedback">
               Некорректные плагины, используйте корректные символы и пишите через запятую
             </div>
@@ -70,7 +70,7 @@ MCStatus - Создание сервера
             {% for msg in get_flashed_messages() %}
                 <div class="flash">{{msg}}</div>
             {% endfor %}
-          <a href="/server/0">
+          <a href="/">
             <button class="w-100 btn btn-primary btn-lg" type="submit">Создать сервер</button>
           </a>
         </form>

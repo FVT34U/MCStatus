@@ -12,7 +12,7 @@ MCStatus - {{ server.Name }}
     </div>
     <div class="carousel-caption text-end text-server-page-carousel">
       <h1>{{ server.Name }}</h1>
-      <h2 class="rating-server">2/20</h2>
+      <h2 class="rating-server">Игроков на сервере: {{ online }}</h2>
       <h3 class="rating-server">{{ server.Rating }}</h3>
     </div>
   </div>
@@ -58,12 +58,13 @@ MCStatus - {{ server.Name }}
         <p class="lead">{{ server.Description }}
       </div>
       <div class="col-md-3 d-flex justify-content-lg-end align-items-center">
+        {% if online > 0 %}
         <h2 class="featurette-heading">Онлайн</h2>
-        {% if True %}
         <svg height="100" width="100">
           <circle cx="50" cy="50" r="40" fill="rgb(65, 160, 65)" />
        </svg>
        {% else %}
+       <h2 class="featurette-heading">Офлайн</h2>
        <svg height="100" width="100">
         <circle cx="50" cy="50" r="40" fill="red" />
        </svg>
@@ -110,8 +111,8 @@ MCStatus - {{ server.Name }}
                     </ul>
                   </div>
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    {% if session['isAdmin'] == True %}
-                    <a href="/editprofile">
+                    {% if session['isAdmin'] == True or session['userID'] == comment.OwnerID %}
+                    <a href="/comment/{{ comment.ID }}/del">
                       <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
                     </a>
                     {% endif %}
@@ -120,29 +121,37 @@ MCStatus - {{ server.Name }}
           </div>
           {% endfor %}
           <div class="col-md-4">
-            {% if session['isAdmin'] == True %}
+            {% if session['userID'] == server.OwnerID %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
               <a href="/editserver">
                 <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Редактировать</button>
               </a>
             </div>
+            {% endif %}
+            {% if session['isAdmin'] == True or session['userID'] == server.OwnerID %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <a href="/editprofile">
+              <a href="/server/{{ server.ID }}/del">
                 <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
               </a>
             </div>
             {% endif %}
           </div>
           <div class="col-md-8">
-            <div class="py-4">            
-              <label for="comment" class="form-label ">Написать комментариий</label>
-              <textarea class="form-control" aria-label="With textarea" id="comment" name="comment" placeholder=""></textarea>
-              <div class="invalid-feedback">
-                Некорректные комментариий, используйте корректные символы
-              </div>
+            <div class="py-4">
+              <form class="needs-validation" novalidate="" method="post">
+                <label for="new_comment" class="form-label ">Написать комментарий</label>
+                <textarea class="form-control" aria-label="With textarea" id="new_comment" name="new_comment" placeholder=""></textarea>
+                <div class="invalid-feedback">
+                  Некорректные комментарий, используйте корректные символы
+                </div>
             </div>
           </div>
-          <a href="/server/0" class="py-2">
-            <button class="w-60 btn btn-primary btn-lg" type="submit">Отправить комментариий</button>
+          {% for msg in get_flashed_messages() %}
+                <div class="flash">{{msg}}</div>
+          {% endfor %}
+          <a href="/" class="py-2">
+            <button class="w-60 btn btn-primary btn-lg" type="submit">Отправить комментарий</button>
+          </a>
+        </form>
       </div>
 {% endblock %}

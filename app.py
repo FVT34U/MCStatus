@@ -123,6 +123,8 @@ def main_page():
         if session['loggedIn']:
             if User.query.filter_by(ID=session['userID']).first().Role == 'admin':
                 session['isAdmin'] = True
+            else:
+                session['isAdmin'] = False
             return render_template('Main_page.html', session=session, servers=servers)  # Подгрузить новую шапку
     else:
         session['loggedIn'] = False
@@ -147,6 +149,10 @@ def login_page():
                 print('Logged In!!!')
                 session['loggedIn'] = True
                 session['userID'] = get_data.ID
+                if User.query.filter_by(ID=session['userID']).first().Role == 'admin':
+                    session['isAdmin'] = True
+                else:
+                    session['isAdmin'] = False
                 session.modified = True
                 return redirect('/')
         flash('Вы ввели неверный логин или пароль, попробуйте ещё раз')
@@ -194,11 +200,27 @@ def reg_page():
         return render_template('Sign_up_page.html')
 
 
-@app.route('/server/<int:server_id>')
+@app.route('/server/<int:server_id>', methods=['POST', 'GET'])
 def server_page(server_id):
-    server = ServerPage.query.filter_by(ID=server_id).first()
-    session['curServerID'] = server_id
-    return render_template('Server_page.html', session=session, server=server, User=User)
+    if request.method == 'POST':
+        comment = request.form['new_comment']
+        c1 = Comment(owner_id=session['userID'], server_page_id=session['curServerID'], count_like=0, count_dislike=0, text=comment)
+        try:
+            db.session.add(c1)
+            db.session.commit()
+        except:
+            flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+        return redirect('/server/' + str(session['curServerID']))
+    else:
+        server = ServerPage.query.filter_by(ID=server_id).first()
+        session['curServerID'] = server_id
+        try:
+            look = JavaServer.lookup(server.IP)
+            status = look.query()
+            online = status.players.online
+        except:
+            online = 0
+        return render_template('Server_page.html', session=session, server=server, User=User, online=online)
 
 
 @app.route('/createserver', methods=['POST', 'GET'])
@@ -209,6 +231,7 @@ def create_server_page():
         version = request.form['version']
         description = request.form['description']
         tags = request.form['tags'].split(', ')
+        plugins = request.form['plugins'].split(', ')
         '''server_image = request.files['imgServer']
         if server_image is None:
             return redirect('/createserver')
@@ -222,7 +245,7 @@ def create_server_page():
             flash('Сервер с таким IP-адресом уже находится в системе!')
             return redirect('/createserver')
         server1 = ServerPage(name=server_name, ip=ip, version=version, description=description, image='', rating=0.,
-                             plugins=[], tags=tags, owner_id=session['userID'])
+                             plugins=plugins, tags=tags, owner_id=session['userID'])
         try:
             db.session.add(server1)
             db.session.commit()
@@ -325,6 +348,38 @@ def edit_server():
         return render_template('Edit_Server_page.html', session=session, server=server)
 
 
+@app.route('/comment/<int:comment_id>/del')
+def del_comment(comment_id):
+    if session['isAdmin'] == False and session['userID'] != Comment.query.filter_by(ID=comment_id).first().OwnerID:
+        return redirect('/')
+    del1 = Comment.query.filter_by(ID=comment_id).first()
+    try:
+        db.session.delete(del1)
+        db.session.commit()
+        return redirect('/server/' + str(session['curServerID']))
+    except:
+        return redirect('/')
+
+
+@app.route('/server/<int:server_id>/del')
+def del_server(server_id):
+    if session['isAdmin'] == False and session['userID'] != ServerPage.query.filter_by(ID=server_id).first().OwnerID:
+        return redirect('/')
+    del1 = ServerPage.query.filter_by(ID=server_id).first()
+    try:
+        db.session.delete(del1)
+        db.session.commit()
+        return redirect('/')
+    except:
+        flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+        return redirect('/server/' + str(session['curServerID']))
+
+
+@app.route('/search')
+def search():
+    return render_template('Search.html')
+
+
 @app.route('/exit')
 def _exit():
     session.pop('isAdmin', None)
@@ -333,10 +388,6 @@ def _exit():
     session['loggedIn'] = False
     return redirect('/')
 
-
-@app.route('/search')
-def search():
-    return render_template('Search.html')
 
 @app.errorhandler(404)
 def http_404_handler(error):
