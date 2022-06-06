@@ -75,9 +75,19 @@ body{
 .btn-primary:hover {
     background-color: rgb(255, 255, 255);
     color:rgb(65, 160, 65);
-    border-color: rgb(65, 160, 65);;
+    border-color: rgb(65, 160, 65);
 }
 
+.btn-primary:focus {
+    background-color:rgb(65, 160, 65);
+    border-color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+}
+
+
+.btn:focus, .btn:active {
+    box-shadow: none !important;
+  }
 
 .list-general-page{
     padding-top: 10%;
