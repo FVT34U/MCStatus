@@ -5,171 +5,175 @@ MCStatus - {{ server.Name }}
 {% endblock %}
 
 {% block body %}
-<main class="main-sever-page">  
-  <img src="../static/Ref/Minecraft_page.png" class="bd-placeholder-img" width="100%" height="100%" aria-hidden="true" alt="">
-  <div class="container">
-    <div class="flex justify-content-start">
-    </div>
-    <div class="carousel-caption text-end text-server-page-carousel">
-      <h1>{{ server.Name }}</h1>
-      <h2 class="rating-server">Игроков на сервере: {{ online }}</h2>
-      <h3 class="rating-server">{{ server.Rating }}</h3>
-    </div>
-  </div>
-  <div class="container d-flex p-3 justify-content-between">
-    <div class="list-group col-6 col-md-5">
-      <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
-        <div>
-          <h6 class="mb-0">Владелец сервера</h6>
-          <a href="/profile/{{ server.user.ID }}" class="text-owner-user">
-            <p class="mb-0 opacity-75">{{ server.user.Nickname }}</p>
-          </a>
+<main class="main-sever-page">
+    <img src="{{ server.Image }}" class="bd-placeholder-img" width="100%" height="100%" aria-hidden="true"
+         alt="">
+    <div class="container">
+        <div class="flex justify-content-start">
         </div>
-      </div>
-      <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
-        <div>
-          <h6 class="mb-0">Версия</h6>
-          <p class="mb-0 opacity-75">{{ server.Version }}</p>
+        <div class="carousel-caption text-end text-server-page-carousel">
+            <h1>{{ server.Name }}</h1>
+            <h2 class="rating-server">Игроков на сервере: {{ online }}</h2>
+            <h3 class="rating-server">{{ server.Rating }}</h3>
         </div>
-      </div>
-      <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
-        <div>
-          <h6 class="mb-0">IP</h6>
-          <p class="mb-0 opacity-75">{{ server.IP }}</p>
-        </div>
-      </div>
     </div>
-    <div class="list-group col-6 col-md-5">
-      {% for plugin in server.Plugins %}
-        <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
-          <div>
-            <p class="mb-0 opacity-75">{{ plugin }}</p>
-          </div>
+    <div class="container d-flex p-3 justify-content-between">
+        <div class="list-group col-6 col-md-5">
+            <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
+                <div>
+                    <h6 class="mb-0">Владелец сервера</h6>
+                    <a href="/profile/{{ server.user.ID }}" class="text-owner-user">
+                        <p class="mb-0 opacity-75">{{ server.user.Nickname }}</p>
+                    </a>
+                </div>
+            </div>
+            <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
+                <div>
+                    <h6 class="mb-0">Версия</h6>
+                    <p class="mb-0 opacity-75">{{ server.Version }}</p>
+                </div>
+            </div>
+            <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
+                <div>
+                    <h6 class="mb-0">IP</h6>
+                    <p class="mb-0 opacity-75">{{ server.IP }}</p>
+                </div>
+            </div>
         </div>
-      {% endfor %}
+        <div class="list-group col-6 col-md-5">
+            {% for plugin in server.Plugins %}
+            <div class="list-group-item d-flex gap-2 w-100 justify-content-between">
+                <div>
+                    <p class="mb-0 opacity-75">{{ plugin }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-  </div>
     <hr class="featurette-divider">
 
     <div class=" container">
-      <div class="row">
-      <div class="col-md-9">
-        <h2 class="featurette-heading">Описание</h2>
-        <p class="lead">{{ server.Description }}
-      </div>
-      <div class="col-md-3 d-flex justify-content-lg-end align-items-center">
-        {% if online > 0 %}
-        <h2 class="featurette-heading">Онлайн</h2>
-        <svg height="100" width="100">
-          <circle cx="50" cy="50" r="40" fill="rgb(65, 160, 65)" />
-       </svg>
-       {% else %}
-       <h2 class="featurette-heading">Офлайн</h2>
-       <svg height="100" width="100">
-        <circle cx="50" cy="50" r="40" fill="red" />
-       </svg>
-       {% endif %}
-      </div>
-      <div class="col-md-5 d-flex justify-content-lg-start align-items-end">
-        {% for tag in server.Tags %}
-          <span class="badge bg-success p-2 ms-1">{{ tag }}</span>
-        {% endfor %}
-      </div>
+        <div class="row">
+            <div class="col-md-9">
+                <h2 class="featurette-heading">Описание</h2>
+                <p class="lead">{{ server.Description }}
+            </div>
+            <div class="col-md-3 d-flex justify-content-lg-end align-items-center">
+                {% if online > 0 %}
+                <h2 class="featurette-heading">Онлайн</h2>
+                <svg height="100" width="100">
+                    <circle cx="50" cy="50" r="40" fill="rgb(65, 160, 65)"/>
+                </svg>
+                {% else %}
+                <h2 class="featurette-heading">Офлайн</h2>
+                <svg height="100" width="100">
+                    <circle cx="50" cy="50" r="40" fill="red"/>
+                </svg>
+                {% endif %}
+            </div>
+            <div class="col-md-5 d-flex justify-content-lg-start align-items-end">
+                {% for tag in server.Tags %}
+                <span class="badge bg-success p-2 ms-1">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-  </div>   
-    
+
     <hr class="featurette-divider">
 
     <div class="container">
-      <div class="row">
-        {% for comment in server.comments %}
-          <div class="col-md-8">
-              <div class="media g-mb-30 media-comment">
-                  <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
-                    <div class="g-mb-15">
-                      <a href="/profile/{{ comment.OwnerID }}" class="comment-text">
-                        <h5 class="h5 g-color-gray-dark-v1 mb-0">{{ User.query.filter_by(ID=comment.OwnerID).first().Nickname }}</h5>
-                      </a>
-                      <span class="g-color-gray-dark-v4 g-font-size-12"></span>
+        <div class="row">
+            {% for comment in server.comments %}
+            <div class="col-md-8">
+                <div class="media g-mb-30 media-comment">
+                    <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
+                        <div class="g-mb-15">
+                            <a href="/profile/{{ comment.OwnerID }}" class="comment-text">
+                                <h5 class="h5 g-color-gray-dark-v1 mb-0">{{ comment.user.Nickname }}</h5>
+                            </a>
+                            <span class="g-color-gray-dark-v4 g-font-size-12"></span>
+                        </div>
+
+                        <p class="px-2 py-2">{{ comment.Text }}</p>
+                        <p class="px-2 py-2">Оценка: {{ ServerRate.query.filter_by(ServerPageID=server.ID, UserID=comment.OwnerID).first().RateNumber }}</p>
+
+
+                        <ul class="list-inline d-sm-flex my-0">
+                            <li class="list-inline-item g-mr-20">
+                                <a class="u-link-v5 g-color-primary--hover like-text"
+                                   href="/comment/{{ comment.ID }}/like">
+                                    <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i>
+                                    Лайки: {{ comment.CountLike }}
+                                </a>
+                            </li>
+                            <li class="list-inline-item g-mr-20">
+                                <a class="u-link-v5 g-color-primary--hover dislike-text"
+                                   href="/comment/{{ comment.ID }}/dislike">
+                                    <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i>
+                                    Дизлайки: {{ comment.CountDislike }}
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-              
-                    <p class="px-2 py-2">{{ comment.Text }}</p>
-              
-                    <ul class="list-inline d-sm-flex my-0">
-                      <li class="list-inline-item g-mr-20">
-                        <a class="u-link-v5 g-color-primary--hover like-text">
-                          <i class="fa fa-thumbs-up g-pos-rel g-top-1 g-mr-3"></i>
-                          Like: {{ comment.CountLikes }}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end py-1">
+                        {% if session['isAdmin'] == True or session['userID'] == comment.OwnerID %}
+                        <a href="/comment/{{ comment.ID }}/del">
+                            <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
                         </a>
-                      </li>
-                      <li class="list-inline-item g-mr-20">
-                        <a class="u-link-v5 g-color-primary--hover dislike-text">
-                          <i class="fa fa-thumbs-down g-pos-rel g-top-1 g-mr-3"></i>
-                          Dislike: {{ comment.CountDislikes }}
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end py-1">
-                    {% if session['isAdmin'] == True or session['userID'] == comment.OwnerID %}
-                    <a href="/comment/{{ comment.ID }}/del" >
-                      <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
-                    </a>
-                    {% endif %}
-                  </div>
-              </div>
-          </div>
-          {% endfor %}
-          <div class="col-md-4">
-            {% if session['userID'] == server.OwnerID %}
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <a href="/editserver">
-                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Редактировать</button>
-              </a>
-            </div>
-            {% endif %}
-            {% if session['isAdmin'] == True or session['userID'] == server.OwnerID %}
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <a href="/server/{{ server.ID }}/del">
-                <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
-              </a>
-            </div>
-            {% endif %}
-          </div>
-        {% if session['loggedIn'] == True %}
-          <div class="col-md-8">
-            <div class="py-4">
-              <form class="needs-validation" novalidate="" method="post">
-                <label for="new_comment" class="form-label ">Написать комментарий</label>
-                <textarea class="form-control" aria-label="With textarea" id="new_comment" name="new_comment" placeholder=""></textarea>
-                <div class="invalid-feedback">
-                  Некорректные комментарий, используйте корректные символы
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-            <div>
-              <a href="/" >
-                <button class="w-60 btn btn-primary btn-lg" type="button">Отправить комментарий</button>
-              </a>
+            {% endfor %}
+            <div class="col-md-4">
+                {% if session['userID'] == server.OwnerID %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="/editserver">
+                        <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Редактировать</button>
+                    </a>
+                </div>
+                {% endif %}
+                {% if session['isAdmin'] == True or session['userID'] == server.OwnerID %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="/server/{{ server.ID }}/del">
+                        <button type="submit" class="btn btn-primary btn-lg px-4 me-md-2">Удалить</button>
+                    </a>
+                </div>
+                {% endif %}
             </div>
-          </div>
-        </form>
-          <form class="form2" novalidate="" method="post">
-          <div class="col-md-4 py-6">
-            <div class = "d-md-flex justify-content-md-end">
-              <div class="input-group input-group-sm mb-3" >
-                <span class="input-group-text " id="inputGroup-sizing-sm">Оценка</span>
-                <input type="text" class="form-control" id="score" name="score" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-              </div>
+            {% for msg in get_flashed_messages() %}
+            <div class="flash">{{msg}}</div>
+            {% endfor %}
+            {% if session['loggedIn'] == True %}
+            <div class="col-md-8">
+                <div class="py-4">
+                    <form class="needs-validation" novalidate="" method="post">
+                        <label for="new_comment" class="form-label ">Написать комментарий</label>
+                        <textarea class="form-control" aria-label="With textarea" id="new_comment" name="new_comment"
+                                  placeholder=""></textarea>
+                        <div class="invalid-feedback">
+                            Некорректные комментарий, используйте корректные символы
+                        </div>
+                </div>
+                <div>
+                </div>
             </div>
-            <div class = "d-md-flex justify-content-md-end align-items-end">
-              <a href="/server/{{ server.ID }}/score" class="py-5">
-                <button class="w-20 btn btn-primary btn-lg " type="submit">Отправить оценку</button>
-              </a>
+            <div class="col-md-4 py-6">
+                <div class="d-md-flex justify-content-md-end">
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text " id="inputGroup-sizing-sm">Оценка</span>
+                        <input type="text" class="form-control" id="score" name="score"
+                               aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                               placeholder="От 1 до 5">
+                    </div>
+                </div>
+                <div class="d-md-flex justify-content-md-end align-items-end">
+                    <a href="/server/{{ server.ID }}" class="py-5">
+                        <button class="w-20 btn btn-primary btn-lg " type="submit">Отправить</button>
+                    </a>
+                </div>
             </div>
-          </div>
-          </form>
-        {% endif %}
-          {% for msg in get_flashed_messages() %}
-                <div class="flash">{{msg}}</div>
-          {% endfor %}
-{% endblock %}
+            </form>
+            {% endif %}
+        </div>
+        {% endblock %}

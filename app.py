@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, abort, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from mcstatus import JavaServer
+import minestat
 import os
 
 app = Flask(__name__, template_folder='templates')
@@ -10,7 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-UPLOAD_FOLDER = '/static/user_images'
+UPLOAD_FOLDER = 'static/user_images/'
 ALLOWED_EXTENSIONS = {'png', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -118,14 +119,14 @@ class ServerRate(db.Model):
 
 @app.route('/')
 def main_page():
-    servers = ServerPage.query.all()
+    servers = ServerPage.query.order_by(ServerPage.Rating.desc()).all()
     if 'loggedIn' in session:
         if session['loggedIn']:
             if User.query.filter_by(ID=session['userID']).first().Role == 'admin':
                 session['isAdmin'] = True
             else:
                 session['isAdmin'] = False
-            return render_template('Main_page.html', session=session, servers=servers)  # Подгрузить новую шапку
+            return render_template('Main_page.html', session=session, servers=servers)
     else:
         session['loggedIn'] = False
         session['isAdmin'] = False
@@ -203,33 +204,38 @@ def reg_page():
 @app.route('/server/<int:server_id>', methods=['POST', 'GET'])
 def server_page(server_id):
     if request.method == 'POST':
-        try:
-            a = request.form['new_comment']
-        except:
-            return redirect('/server/' + str(server_id) + '/score')
-        if request.form['new_comment'] != '':
+        if request.form['new_comment'] != '' and request.form['score'] != '':
             comment = request.form['new_comment']
-            c1 = Comment(owner_id=session['userID'], server_page_id=session['curServerID'], count_like=0, count_dislike=0, text=comment)
-            try:
-                db.session.add(c1)
-                db.session.commit()
-            except:
-                flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+            score = request.form['score']
+            if Comment.query.filter_by(ServerPageID=server_id, OwnerID=session['userID']).first() is None:
+                c1 = Comment(owner_id=session['userID'], server_page_id=session['curServerID'], count_like=0, count_dislike=0, text=comment)
+                sc1 = ServerRate(server_page_id=server_id, user_id=session['userID'], rate_number=score)
+                try:
+                    db.session.add_all([c1, sc1])
+                    db.session.commit()
+                except:
+                    flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+            else:
+                flash('Вы уже оставляли комментарий с оценкой')
+        else:
+            flash('Пожалуйста, напишите текст комментария и оценку')
         return redirect('/server/' + str(session['curServerID']))
     else:
         server = ServerPage.query.filter_by(ID=server_id).first()
         session['curServerID'] = server_id
-        try:
-            look = JavaServer.lookup(server.IP)
-            status = look.query()
-            online = status.players.online
-        except:
-            online = 0
-        return render_template('Server_page.html', session=session, server=server, User=User, online=online)
+        ms = minestat.MineStat(server.IP, 25565, 1)
+        online = 0
+        if ms.online:
+            online = ms.current_players
+        return render_template('Server_page.html', session=session, server=server, ServerRate=ServerRate, online=online)
 
 
 @app.route('/createserver', methods=['POST', 'GET'])
 def create_server_page():
+    if 'loggedIn' not in session or 'userID' not in session:
+        return redirect('/login')
+    if not session['loggedIn'] or session['userID'] is None:
+        return redirect('login')
     if request.method == 'POST':
         server_name = request.form['serverName']
         ip = request.form['IP']
@@ -237,19 +243,22 @@ def create_server_page():
         description = request.form['description']
         tags = request.form['tags'].split(', ')
         plugins = request.form['plugins'].split(', ')
-        '''server_image = request.files['imgServer']
+        server_image = request.files['imgServer']
         if server_image is None:
+            flash('Нет изображения')
             return redirect('/createserver')
         if server_image.filename == '':
+            flash('Нет изображения')
             return redirect('/createserver')
         if server_image and allowed_file(server_image.filename):
             server_image.save(os.path.join(app.config['UPLOAD_FOLDER'], server_image.filename))
         else:
-            return redirect('/createserver')'''
+            flash('Ошибка в загрузке изображения')
+            return redirect('/createserver')
         if ServerPage.query.filter_by(IP=ip).first() is not None:
             flash('Сервер с таким IP-адресом уже находится в системе!')
             return redirect('/createserver')
-        server1 = ServerPage(name=server_name, ip=ip, version=version, description=description, image='', rating=0.,
+        server1 = ServerPage(name=server_name, ip=ip, version=version, description=description, image='../static/user_images/' + server_image.filename, rating=0.,
                              plugins=plugins, tags=tags, owner_id=session['userID'])
         try:
             db.session.add(server1)
@@ -266,9 +275,9 @@ def create_server_page():
 def edit_profile():
     if request.method == 'POST':
         if 'loggedIn' not in session or 'userID' not in session:
-            return redirect('/')
+            return redirect('/login')
         if not session['loggedIn'] or session['userID'] is None:
-            return redirect('/')
+            return redirect('/login')
         nickname = request.form['nickName']
         email = request.form['email']
         password = request.form['password']
@@ -316,9 +325,9 @@ def profile(user_id):
 def edit_server():
     if request.method == 'POST':
         if 'loggedIn' not in session or 'userID' not in session:
-            return redirect('/')
+            return redirect('/login')
         if not session['loggedIn'] or session['userID'] is None:
-            return redirect('/')
+            return redirect('/login')
         if session['userID'] != ServerPage.query.filter_by(ID=session['curServerID']).first().OwnerID:
             return redirect('/')
         server_name = request.form['serverName']
@@ -327,9 +336,18 @@ def edit_server():
         description = request.form['description']
         tags = request.form['tags']
         plugins = request.form['plugins']
+        server_image = request.files['imgServer']
         if server_name != '' and ServerPage.query.filter_by(Name=server_name).first() is not None:
             flash("Такое название сервера уже занято, попробуйте другое")
             return redirect('/editserver')
+        if server_image and allowed_file(server_image.filename):
+            server_image.save(os.path.join(app.config['UPLOAD_FOLDER'], server_image.filename))
+        else:
+            flash('Ошибка в загрузке изображения')
+            return redirect('/createserver')
+        if ServerPage.query.filter_by(IP=ip).first() is not None:
+            flash('Сервер с таким IP-адресом уже находится в системе!')
+            return redirect('/createserver')
         server1 = ServerPage.query.filter_by(ID=session['curServerID']).first()
         if server_name != '':
             server1.Name = server_name
@@ -343,6 +361,8 @@ def edit_server():
             server1.Tags = tags.split(', ')
         if plugins != '':
             server1.Plugins = plugins.split(', ')
+        if server_image.filename != '':
+            server1.Image = '../static/user_images/' + server_image.filename
         db.session.add(server1)
         db.session.commit()
         return redirect('/server/' + str(session['curServerID']))
@@ -358,8 +378,10 @@ def del_comment(comment_id):
     if session['isAdmin'] == False and session['userID'] != Comment.query.filter_by(ID=comment_id).first().OwnerID:
         return redirect('/')
     del1 = Comment.query.filter_by(ID=comment_id).first()
+    del2 = ServerRate.query.filter_by(ServerPageID=session['curServerID'], UserID=session['userID']).first()
     try:
         db.session.delete(del1)
+        db.session.delete(del2)
         db.session.commit()
         return redirect('/server/' + str(session['curServerID']))
     except:
@@ -380,40 +402,109 @@ def del_server(server_id):
         return redirect('/server/' + str(session['curServerID']))
 
 
-@app.route('/server/<int:server_id>/score', methods=['POST', 'GET'])
-def score_server(server_id):
-    if session['loggedIn']:
-        if request.form['score'] != '':
-            if 0 < int(request.form['score']) <= 5:
-                if ServerRate.query.filter_by(ServerPageID=server_id, UserID=session['userID']).first() is None:
-                    score = request.form['score']
-                    sr1 = ServerRate(server_page_id=server_id, user_id=session['userID'], rate_number=int(score))
-                    try:
-                        db.session.add(sr1)
-                        db.session.commit()
-                    except:
-                        flash('Ошибка при занесении данных в базу, обратитесь к администратору')
-                else:
-                    score = request.form['score']
-                    sr1 = ServerRate.query.filter_by(ServerPageID=server_id, UserID=session['userID']).first()
-                    sr1.RateNumber = int(score)
-                    try:
-                        db.session.add(sr1)
-                        db.session.commit()
-                    except:
-                        flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+@app.route('/comment/<int:comment_id>/like')
+def dislike_comment(comment_id):
+    if 'loggedIn' in session:
+        if session['loggedIn']:
+            if CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first() is None:
+                cr1 = CommentRate(comment_id=comment_id, user_id=session['userID'], rate_number=1)
+                try:
+                    db.session.add(cr1)
+                    db.session.commit()
+                except:
+                    flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+            elif CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first().RateNumber == 0:
+                cr1 = CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first()
+                cr1.RateNumber = 1
+                try:
+                    db.session.add(cr1)
+                    db.session.commit()
+                except:
+                    flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+            elif CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first().RateNumber == 1:
+                cr1 = CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first()
+                cr1.RateNumber = 0
+                try:
+                    db.session.add(cr1)
+                    db.session.commit()
+                except:
+                    flash('Ошибка при занесении данных в базу, обратитесь к администратору')
             else:
-                flash('Оценка должна быть от 1 до 5')
+                cr1 = CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first()
+                cr1.RateNumber = 1
+                try:
+                    db.session.add(cr1)
+                    db.session.commit()
+                except:
+                    flash('Ошибка при занесении данных в базу, обратитесь к администратору')
         else:
-            flash("Значение оценки не должно быть пустым")
+            return redirect('/login')
     else:
-        flash("Вы не вошли в аккаунт")
+        return redirect('/login')
+    return redirect('/server/' + str(session['curServerID']))
+
+
+@app.route('/comment/<int:comment_id>/dislike')
+def like_comment(comment_id):
+    if 'loggedIn' in session:
+        if session['loggedIn']:
+            if CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first() is None:
+                cr1 = CommentRate(comment_id=comment_id, user_id=session['userID'], rate_number=-1)
+                try:
+                    db.session.add(cr1)
+                    db.session.commit()
+                except:
+                    flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+            elif CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first().RateNumber == 0:
+                cr1 = CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first()
+                cr1.RateNumber = -1
+                try:
+                    db.session.add(cr1)
+                    db.session.commit()
+                except:
+                    flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+            elif CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first().RateNumber == 1:
+                cr1 = CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first()
+                cr1.RateNumber = -1
+                try:
+                    db.session.add(cr1)
+                    db.session.commit()
+                except:
+                    flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+            else:
+                cr1 = CommentRate.query.filter_by(CommentID=comment_id, UserID=session['userID']).first()
+                cr1.RateNumber = 0
+                try:
+                    db.session.add(cr1)
+                    db.session.commit()
+                except:
+                    flash('Ошибка при занесении данных в базу, обратитесь к администратору')
+        else:
+            return redirect('/login')
+    else:
+        return redirect('/login')
     return redirect('/server/' + str(session['curServerID']))
 
 
 @app.route('/search')
 def search():
-    return render_template('Search.html')
+    ip = request.args['ip']
+    if ServerPage.query.filter_by(IP=ip).first() is not None:
+        return redirect('/server/' + str(ServerPage.query.filter_by(IP=ip).first().ID))
+    ms = minestat.MineStat(ip, 25565, 1)
+    server = {}
+    if ms.online:
+        server = {
+            'online': ms.current_players,
+            'ping': ms.latency,
+            'motd': ms.stripped_motd,
+            'version': ms.version,
+            'ip': ip,
+        }
+    else:
+        return redirect('/')
+    return render_template('Search.html', server=server)
+
 
 
 @app.route('/exit')
