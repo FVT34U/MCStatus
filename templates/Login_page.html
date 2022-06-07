@@ -23,12 +23,6 @@
       <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
       <label for="floatingPassword">Пароль</label>
     </div>
-
-    <div class="checkbox mb-2">
-      <label>
-        <input type="checkbox" value="remember-me"> Остаться в системе
-      </label>
-    </div>
     {% for msg in get_flashed_messages() %}
       <div class="flash">{{msg}}</div>
     {% endfor %}

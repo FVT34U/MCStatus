@@ -35,7 +35,7 @@ MCStatus - {{ user.Nickname }}
           {% for server in user.servers %}
           <a href="/server/{{ server.ID }}" class="list-group-item list-group-item-action">
             <div class="card mb-3">
-            <img src="../static/Ref/Minecraft_page.png" class="card-img-top" alt="">
+            <img src="{{ server.Image }}" class="card-img-top" alt="">
             <div class="card-body">
               <h5 class="card-title">{{ server.Name }}</h5>
               <p class="card-text">{{ server.Description }}</p>

@@ -7,102 +7,115 @@ MCStatus - Редактировать сервер
 {% block body %}
 <div class="container">
     <main>
-      <div class="text-center logo-creat-server">
-          <img class="d-block mx-auto mb-2" src="../static/Ref/logo_mc.png" alt="" width="72" height="57">
-        <h2>Редактирование страницы сервера</h2>
-        <p class="lead">Изменить данные своего сервера и сохраните их</p>
-      </div>
-        <div class="col-md-7 col-lg-12">
-          <form class="needs-validation" novalidate="" method="post">
-            <div class="row g-3">
-            <div class="col-sm-6">
-                <label for="serverName" class="form-label">Введите новое название сервера</label>
-                <input type="text" class="form-control" id="serverName" name="serverName" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" value="" required="">
-                <div class="invalid-feedback">
-                  Некорректное название сервера, используйте корректные символы
-                </div>
-            </div>
-  
-            <div class="col-sm-6">
-                <label for="serverName" class="form-label">Нынешнее название сервера</label>
-                <p class="lead">{{ server.Name }}</p>
-            </div>
-
-            <div class="col-sm-6">
-                <label for="version" class="form-label">Введите новую версию</label>
-                <input type="text" class="form-control" id="version" name="version" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" value="" required="">
-                <div class="invalid-feedback">
-                  Некорректная версию игры, используйте корректные символы
-                </div>
-            </div>
-
-            <div class="col-sm-6">
-                <label for="version" class="form-label">Нынешняя версия</label>
-                <p class="lead">{{ server.Version }}</p>
-            </div>
-  
-            <div class="col-sm-6">
-                <label for="IP" class="form-label">Новый IP</label>
-                <input type="text" class="form-control" id="IP" name="IP" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" required="">
-                <div class="invalid-feedback">
-                  Некорректный IP, используйте корректные символы
-                </div>
-            </div>
-
-            <div class="col-sm-6">
-                <label for="version" class="form-label">Нынешний IP</label>
-                <p class="lead">{{ server.IP }}</p>
-            </div>
-
-  
-            <div class="col-sm-6">
-              <label for="description" class="form-label">Новое описание</label>
-              <textarea class="form-control" aria-label="With textarea" id="description" name="description" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились"></textarea>
-              <div class="invalid-feedback">
-                Некорректное описание, используйте корректные символы
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-                <label for="description" class="form-label">Нынешнее описание</label>
-                <p class="lead">{{ server.Description }}</p>
-            </div>
-
-            <div class="col-sm-6">
-                <label for="tags" class="form-label">Новые теги</label>
-                <textarea class="form-control" aria-label="With textarea" id="tags" name="tags" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились"></textarea>
-                <div class="invalid-feedback">
-                    Некорректные теги, используйте корректные символы и пишите через запятую
-                </div>
-            </div>
-  
-            <div class="col-sm-6">
-                  <label for="tags" class="form-label">Нынешние теги</label>
-                  <p class="lead">{{ server.Tags }}</p>
-            </div>
-
-            <div class="col-sm-6">
-                <label for="plugins" class="form-label">Новые плагины</label>
-                <textarea class="form-control" aria-label="With textarea" id="plugins" name="plugins" placeholder="Оставьте поле пустым, для того чтобы измения не сохранились"></textarea>
-                <div class="invalid-feedback">
-                    Некорректные плагины, используйте корректные символы и пишите через запятую
-                </div>
-            </div>
-  
-            <div class="col-sm-6">
-                  <label for="description" class="form-label">Нынешние плагины</label>
-                  <p class="lead">{{ server.Plugins }}</p>
-            </div>
-
-            <div class="flash"></div>
-            {% for msg in get_flashed_messages() %}
-                <div class="flash">{{msg}}</div>
-            {% endfor %}
-            <a href="/profile">
-              <button class="w-100 btn btn-primary btn-lg" type="submit">Сохранить изменения</button>
-            </a>
-          </form>
+        <div class="text-center logo-creat-server">
+            <img class="d-block mx-auto mb-2" src="../static/Ref/logo_mc.png" alt="" width="72" height="57">
+            <h2>Редактирование страницы сервера</h2>
+            <p class="lead">Изменить данные своего сервера и сохраните их</p>
         </div>
-      </div>
-    </main>
+        <div class="col-md-7 col-lg-12">
+            <form class="needs-validation" novalidate="" method="post" enctype=multipart/form-data>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label for="serverName" class="form-label">Введите новое название сервера</label>
+                        <input type="text" class="form-control" id="serverName" name="serverName"
+                               placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" value=""
+                               required="">
+                        <div class="invalid-feedback">
+                            Некорректное название сервера, используйте корректные символы
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="serverName" class="form-label">Нынешнее название сервера</label>
+                        <p class="lead">{{ server.Name }}</p>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="version" class="form-label">Введите новую версию</label>
+                        <input type="text" class="form-control" id="version" name="version"
+                               placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" value=""
+                               required="">
+                        <div class="invalid-feedback">
+                            Некорректная версию игры, используйте корректные символы
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="version" class="form-label">Нынешняя версия</label>
+                        <p class="lead">{{ server.Version }}</p>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="IP" class="form-label">Новый IP</label>
+                        <input type="text" class="form-control" id="IP" name="IP"
+                               placeholder="Оставьте поле пустым, для того чтобы измения не сохранились" required="">
+                        <div class="invalid-feedback">
+                            Некорректный IP, используйте корректные символы
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="version" class="form-label">Нынешний IP</label>
+                        <p class="lead">{{ server.IP }}</p>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <label for="description" class="form-label">Новое описание</label>
+                        <textarea class="form-control" aria-label="With textarea" id="description" name="description"
+                                  placeholder="Оставьте поле пустым, для того чтобы измения не сохранились"></textarea>
+                        <div class="invalid-feedback">
+                            Некорректное описание, используйте корректные символы
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="description" class="form-label">Нынешнее описание</label>
+                        <p class="lead">{{ server.Description }}</p>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="tags" class="form-label">Новые теги</label>
+                        <textarea class="form-control" aria-label="With textarea" id="tags" name="tags"
+                                  placeholder="Оставьте поле пустым, для того чтобы измения не сохранились"></textarea>
+                        <div class="invalid-feedback">
+                            Некорректные теги, используйте корректные символы и пишите через запятую
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="tags" class="form-label">Нынешние теги</label>
+                        <p class="lead">{{ server.Tags }}</p>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="plugins" class="form-label">Новые плагины</label>
+                        <textarea class="form-control" aria-label="With textarea" id="plugins" name="plugins"
+                                  placeholder="Оставьте поле пустым, для того чтобы измения не сохранились"></textarea>
+                        <div class="invalid-feedback">
+                            Некорректные плагины, используйте корректные символы и пишите через запятую
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="description" class="form-label">Нынешние плагины</label>
+                        <p class="lead">{{ server.Plugins }}</p>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="file" class="form-control" id="imgServer" name="imgServer">
+                        <label class="input-group-text">Превью сервера</label>
+                    </div>
+
+                    <div class="flash"></div>
+                    {% for msg in get_flashed_messages() %}
+                    <div class="flash">{{msg}}</div>
+                    {% endfor %}
+                    <a href="/profile">
+                        <button class="w-100 btn btn-primary btn-lg" type="submit">Сохранить изменения</button>
+                    </a>
+            </form>
+        </div>
+</div>
+</main>
 {% endblock %}
